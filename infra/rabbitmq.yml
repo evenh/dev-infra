@@ -1,0 +1,15 @@
+version: "3"
+
+services:
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    hostname: rabbit.infra.dev
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+      - "5671:5671"
+    environment:
+      - RABBITMQ_ERLANG_COOKIE=superDuperSecretCookie
+      - RABBITMQ_DEFAULT_PASS=guest
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_VHOST=vhost
