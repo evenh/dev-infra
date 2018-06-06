@@ -11,7 +11,7 @@ Pull this repo as often as you'd like to look for new tools.
 
 ## How to use
 
-`infra.sh <service> <goal>`
+`infra.sh <goal> <service>`
 
 Valid goals:
 ```
@@ -23,6 +23,8 @@ Requires a service to be specified:
   start         Start a service
   stop          Stop a service
   restart       Restart a service
+  status        Outputs whether a service is running or not
+  tail          Tail log output from a service
 ```
 
 ## How to add a custom service?

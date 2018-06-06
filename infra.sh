@@ -96,8 +96,6 @@ function stop_tool {
     tool_name=$2
     check_exists $tool_name
 
-    is_running=$(tool_is_running $tool_name)
-
     if ! tool_is_running $tool_name; then
         echo "$tool_name is not running, won't try to stop.."
         return 0
@@ -117,6 +115,29 @@ function restart_tool {
     fi
 
     eval "docker-compose -f $script_dir/infra/$tool_name.yml restart"
+}
+
+function status_tool {
+    tool_name=$2
+    check_exists $tool_name
+
+    if ! tool_is_running $tool_name; then
+        echo "$tool_name is NOT running"
+    else
+        echo "$tool_name is running"
+    fi
+}
+
+function tail_tool_log {
+    tool_name=$2
+    check_exists $tool_name
+
+    if ! tool_is_running $tool_name; then
+        echo "$tool_name is not running, won't attempt to tail logs"
+        return 0
+    fi
+
+    eval "docker-compose -f $script_dir/infra/$tool_name.yml logs --follow"
 }
 
 # -- Init section
@@ -139,8 +160,14 @@ case "$1" in
     restart)
         restart_tool $@
     ;;
+    status)
+        status_tool $@
+    ;;
+    tail)
+        tail_tool_log $@
+    ;;
     *)
         echo "Development infrastructure tools. Usage:"
-        echo "  $0 <list|pull|start|stop|restart>"
+        echo "  $0 <list|pull|start|stop|restart|status|tail>"
         exit 9
 esac
