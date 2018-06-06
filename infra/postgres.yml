@@ -1,0 +1,14 @@
+version: "3"
+
+services:
+  postgresql:
+    image: postgres:10-alpine
+    hostname: postgresql.infra.dev
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=development
+      - POSTGRES_USER=dev
+      - POSTGRES_PASSWORD=infra
+    volumes:
+      - ../storage/postgres:/var/lib/postgresql/data:Z
