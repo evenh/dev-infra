@@ -27,6 +27,15 @@ Requires a service to be specified:
   tail          Tail log output from a service
 ```
 
+
+### A note on Windows compatibility
+
+For Windows, named volumes are used instead of host mounted folders (because of issues with Windows..). This means that when trying to start a service you will see a message like this:
+
+> Volume infra-servicename declared as external, but could not be found. Please create the volume manually using `docker volume create --name=infra-servicename` and try again.
+
+In that case, just execute that command and carry on - volume handling is not handled by this script.
+
 ## How to add a custom service?
 
-Create a custom Docker Compose file in the `infra` directory and give it a meaningful name.
+Create a custom Docker Compose file in the `infra` directory and give it a meaningful name. If you use volumes, please also do add a `.win.yml` override definition as it will be automatically be picked up by this script.

@@ -1,0 +1,10 @@
+version: "3"
+
+services:
+  rabbitmq:
+    volumes:
+      - infra-rabbitmq:/var/lib/rabbitmq:Z
+
+volumes:
+  infra-rabbitmq:
+    external: true

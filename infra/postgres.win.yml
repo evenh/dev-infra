@@ -1,0 +1,10 @@
+version: "3"
+
+services:
+  postgresql:
+    volumes:
+      - infra-postgresql:/var/lib/postgresql/data:Z
+
+volumes:
+  infra-postgresql:
+    external: true

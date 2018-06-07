@@ -13,3 +13,5 @@ services:
       - RABBITMQ_DEFAULT_PASS=guest
       - RABBITMQ_DEFAULT_USER=guest
       - RABBITMQ_DEFAULT_VHOST=/
+    volumes:
+      - ../storage/rabbitmq:/var/lib/rabbitmq:Z

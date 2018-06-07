@@ -14,6 +14,22 @@ get_script_dir () {
     echo "$DIR"
 }
 
+function construct_arguments {
+    check_argument $1
+
+    local argument="-f $script_dir/infra/$1.yml"
+
+    if [ is_windows ]; then
+        local win_path="$script_dir/infra/$1.win.yml"
+
+        if [ -r ${win_path} ]; then
+            argument+=" -f $win_path"
+        fi
+    fi
+
+    echo ${argument}
+}
+
 # Check that required tooling is installed
 function check_prerequisites {
     # Check for docker
@@ -49,26 +65,49 @@ function check_exists {
 }
 
 function get_tools {
-    local names=`ls $script_dir/infra | sed 's/\.[^.]*$//'`
+    local names=`ls $script_dir/infra | sed 's/\.[^.]*$//' | grep -v "\."`
     echo "$names"
 }
 
 function list_tools {
-    echo "Available tools:"
-    echo "$(get_tools)"
+    tools=( $(get_tools) )
+
+    echo -e "Available tools:\n"
+
+    for i in "${tools[@]}"
+    do
+        echo "  - $i"
+    done
 }
 
 function tool_is_running {
     tool_name=$1
     check_exists $tool_name
 
-    containers_running=`docker-compose -f $script_dir/infra/$tool_name.yml ps -q`
+    containers_running=`docker-compose $(construct_arguments $tool_name) ps -q`
 
     if [[ "$containers_running" != "" ]]; then
         return 0
     else
         return 1
     fi
+}
+
+function is_windows {
+    case "$OSTYPE" in
+        win*)
+            return 0
+        ;;
+        msys*)
+            return 0
+        ;;
+        cygwin*)
+            return 0
+        ;;
+        *)
+            return 1
+        ;;
+    esac
 }
 
 function pull_tools {
@@ -89,7 +128,7 @@ function start_tool {
         return 0
     fi
 
-    eval "docker-compose -f $script_dir/infra/$tool_name.yml up -d"
+    eval "docker-compose $(construct_arguments $tool_name) up -d"
 }
 
 function stop_tool {
@@ -101,7 +140,7 @@ function stop_tool {
         return 0
     fi
 
-    eval "docker-compose -f $script_dir/infra/$tool_name.yml down"
+    eval "docker-compose $(construct_arguments $tool_name) down"
 }
 
 function restart_tool {
@@ -114,7 +153,7 @@ function restart_tool {
         return 0
     fi
 
-    eval "docker-compose -f $script_dir/infra/$tool_name.yml restart"
+    eval "docker-compose $(construct_arguments $tool_name) restart"
 }
 
 function status_tool {
@@ -137,7 +176,7 @@ function tail_tool_log {
         return 0
     fi
 
-    eval "docker-compose -f $script_dir/infra/$tool_name.yml logs --follow"
+    eval "docker-compose $(construct_arguments $tool_name) logs --follow"
 }
 
 # -- Init section
