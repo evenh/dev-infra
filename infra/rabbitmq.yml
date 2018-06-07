@@ -12,4 +12,4 @@ services:
       - RABBITMQ_ERLANG_COOKIE=superDuperSecretCookie
       - RABBITMQ_DEFAULT_PASS=guest
       - RABBITMQ_DEFAULT_USER=guest
-      - RABBITMQ_DEFAULT_VHOST=vhost
+      - RABBITMQ_DEFAULT_VHOST=/
