@@ -6,6 +6,7 @@ A simple wrapper around [Docker Compose](https://docs.docker.com/compose/) to ea
 
 1. Clone this repo
 2. Add the repo to your path
+3. (Optional) Add an alias for `infra.sh`, such as `infra`
 
 Pull this repo as often as you'd like to look for new tools.
 
@@ -38,4 +39,4 @@ In that case, just execute that command and carry on - volume handling is not ha
 
 ## How to add a custom service?
 
-Create a custom Docker Compose file in the `infra` directory and give it a meaningful name. If you use volumes, please also do add a `.win.yml` override definition as it will be automatically be picked up by this script.
+Create a custom Docker Compose file in the `tools` directory and give it a meaningful name. If you use volumes, please also do add a `.win.yml` override definition as it will be automatically be picked up by this script.

@@ -17,10 +17,10 @@ get_script_dir () {
 function construct_arguments {
     check_argument $1
 
-    local argument="-f $script_dir/infra/$1.yml"
+    local argument="-p infra -f $script_dir/tools/$1.yml"
 
     if [ is_windows ]; then
-        local win_path="$script_dir/infra/$1.win.yml"
+        local win_path="$script_dir/tools/$1.win.yml"
 
         if [ -r ${win_path} ]; then
             argument+=" -f $win_path"
@@ -65,7 +65,7 @@ function check_exists {
 }
 
 function get_tools {
-    local names=`ls $script_dir/infra | sed 's/\.[^.]*$//' | grep -v "\."`
+    local names=`ls $script_dir/tools | sed 's/\.[^.]*$//' | grep -v "\."`
     echo "$names"
 }
 
