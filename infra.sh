@@ -206,7 +206,19 @@ case "$1" in
         tail_tool_log $@
     ;;
     *)
-        echo "Development infrastructure tools. Usage:"
-        echo "  $0 <list|pull|start|stop|restart|status|tail>"
-        exit 9
+        echo -e "Development infrastructure tools"
+        echo -e "<https://github.com/evenh/dev-infra>\n"
+        echo -e "  Usage:  $0 <goal> <service>\n"
+        echo -e "  Ignores services:"
+        echo -e "    list          List available tools"
+        echo -e "    pull          Pull associated containers for all tools"
+        echo -e ""
+        echo -e "  Requires a service to be specified:"
+        echo -e "    start         Start a service"
+        echo -e "    stop          Stop a service"
+        echo -e "    restart       Restart a service"
+        echo -e "    status        Outputs whether a service is running or not"
+        echo -e "    tail          Tail log output from a service"
+
+        exit 0
 esac
