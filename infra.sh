@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Compose settings
+export COMPOSE_IGNORE_ORPHANS=true
+
 # From https://www.ostricher.com/2014/10/the-right-way-to-get-the-directory-of-a-bash-script/
 get_script_dir () {
     SOURCE="${BASH_SOURCE[0]}"
