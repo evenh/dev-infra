@@ -170,6 +170,10 @@ function status_tool {
     fi
 }
 
+function tool_ps {
+    eval " docker ps --filter 'name=infra_'"
+}
+
 function tail_tool_log {
     tool_name=$2
     check_exists $tool_name
@@ -205,6 +209,9 @@ case "$1" in
     status)
         status_tool $@
     ;;
+    ps)
+        tool_ps
+    ;;
     tail)
         tail_tool_log $@
     ;;
@@ -215,6 +222,7 @@ case "$1" in
         echo -e "  Ignores services:"
         echo -e "    list          List available tools"
         echo -e "    pull          Pull associated containers for all tools"
+        echo -e "    ps            List running containers"
         echo -e ""
         echo -e "  Requires a service to be specified:"
         echo -e "    start         Start a service"

@@ -19,6 +19,7 @@ Valid goals:
 Ignores services:
   list          List available tools
   pull          Pull associated containers for all tools
+  ps            List running containers
 
 Requires a service to be specified:
   start         Start a service
