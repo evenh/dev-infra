@@ -115,7 +115,7 @@ function pull_tools {
 
     for i in "${tools[@]}"
     do
-        eval "docker-compose -f $script_dir/infra/$i.yml pull"
+        eval "docker-compose -f $(construct_arguments $i) pull"
     done
 }
 
