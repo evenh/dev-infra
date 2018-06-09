@@ -212,7 +212,7 @@ case "$1" in
     ps)
         tool_ps
     ;;
-    tail)
+    tail|logs)
         tail_tool_log $@
     ;;
     *)
