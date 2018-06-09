@@ -3,6 +3,23 @@
 # Compose settings
 export COMPOSE_IGNORE_ORPHANS=true
 
+function is_windows {
+    case "$OSTYPE" in
+        win*)
+            return 0
+        ;;
+        msys*)
+            return 0
+        ;;
+        cygwin*)
+            return 0
+        ;;
+        *)
+            return 1
+        ;;
+    esac
+}
+
 # From https://www.ostricher.com/2014/10/the-right-way-to-get-the-directory-of-a-bash-script/
 get_script_dir () {
     SOURCE="${BASH_SOURCE[0]}"
@@ -22,7 +39,7 @@ function construct_arguments {
 
     local argument="-p infra -f $script_dir/tools/$1.yml"
 
-    if [ is_windows ]; then
+    if is_windows; then
         local win_path="$script_dir/tools/$1.win.yml"
 
         if [ -r ${win_path} ]; then
@@ -94,23 +111,6 @@ function tool_is_running {
     else
         return 1
     fi
-}
-
-function is_windows {
-    case "$OSTYPE" in
-        win*)
-            return 0
-        ;;
-        msys*)
-            return 0
-        ;;
-        cygwin*)
-            return 0
-        ;;
-        *)
-            return 1
-        ;;
-    esac
 }
 
 function pull_tools {
