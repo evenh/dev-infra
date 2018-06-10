@@ -1,0 +1,19 @@
+version: "3"
+
+services:
+  redis:
+    image: redis:4-alpine
+    hostname: redis.infra.dev
+    ports:
+      - "6379:6379"
+    volumes:
+      - ../storage/redis:/data:Z
+    entrypoint: redis-server --appendonly yes
+    restart: always
+
+  redis-webui:
+    image: marian/rebrow:latest
+    ports:
+      - "6380:5001"
+    depends_on:
+      - redis

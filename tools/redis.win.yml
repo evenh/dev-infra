@@ -1,0 +1,10 @@
+version: "3"
+
+services:
+  redis:
+    volumes:
+      - infra-redis:/data:Z
+
+volumes:
+  infra-redis:
+    external: true
