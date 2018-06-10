@@ -41,3 +41,7 @@ In that case, just execute that command and carry on - volume handling is not ha
 ## How to add a custom service?
 
 Create a custom Docker Compose file in the `tools` directory and give it a meaningful name. If you use volumes, please also do add a `.win.yml` override definition as it will be automatically be picked up by this script.
+
+## License
+
+This project is licensed under the terms of the MIT license. See [LICENSE](https://github.com/evenh/dev-infra/blob/master/LICENSE).
