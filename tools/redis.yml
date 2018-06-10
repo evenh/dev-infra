@@ -10,10 +10,17 @@ services:
       - ../storage/redis:/data:Z
     entrypoint: redis-server --appendonly yes
     restart: always
+    networks:
+      - redis-net
 
   redis-webui:
     image: marian/rebrow:latest
     ports:
       - "6380:5001"
+    networks:
+      - redis-net
     depends_on:
       - redis
+
+networks:
+  redis-net:

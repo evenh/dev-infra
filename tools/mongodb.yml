@@ -14,10 +14,17 @@ services:
       - MONGO_INITDB_DATABASE=development
     volumes:
       - ../storage/mongodb:/data/db:Z
+    networks:
+      - mongodb-net
 
   mongodb-webui:
     image: mrvautin/adminmongo:latest
     ports:
       - "27018:1234"
+    networks:
+      - mongodb-net
     depends_on:
       - mongodb
+
+networks:
+  mongodb-net:

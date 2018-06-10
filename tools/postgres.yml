@@ -12,3 +12,8 @@ services:
       - POSTGRES_PASSWORD=infra
     volumes:
       - ../storage/postgres:/var/lib/postgresql/data:Z
+    networks:
+      - postgresql-net
+
+networks:
+  postgresql-net:

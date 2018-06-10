@@ -3,7 +3,7 @@ version: "3"
 services:
   rabbitmq:
     image: rabbitmq:3-management-alpine
-    hostname: rabbit.infra.dev
+    hostname: rabbitmq.infra.dev
     ports:
       - "15672:15672"
       - "5672:5672"
@@ -15,3 +15,8 @@ services:
       - RABBITMQ_DEFAULT_VHOST=/
     volumes:
       - ../storage/rabbitmq:/var/lib/rabbitmq:Z
+    networks:
+      - rabbitmq-net
+
+networks:
+  rabbitmq-net:
