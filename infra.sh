@@ -35,19 +35,19 @@ get_script_dir () {
 }
 
 function construct_arguments {
-    check_argument $1
+    check_argument "$1"
 
     local argument="-p infra -f $script_dir/tools/$1.yml"
 
     if is_windows; then
         local win_path="$script_dir/tools/$1.win.yml"
 
-        if [ -r ${win_path} ]; then
+        if [ -r "${win_path}" ]; then
             argument+=" -f $win_path"
         fi
     fi
 
-    echo ${argument}
+    echo "${argument}"
 }
 
 # Check that required tooling is installed
@@ -75,24 +75,28 @@ function check_argument {
 
 # Check if a tool with a given name exists
 function check_exists {
-    check_argument $1
+    check_argument "$1"
+    # shellcheck disable=SC2207
     tools=( $(get_tools) )
 
-    if [[ ! " ${tools[@]} " =~ " $1 " ]]; then
+    if [[ ! ${tools[*]} =~ $1 ]]; then
         echo "No such tool: $1"
         exit 99
     fi
 }
 
 function get_tools {
-    local names=`ls $script_dir/tools | sed 's/\.[^.]*$//' | grep -v "\."`
+    local names
+    # shellcheck disable=SC2012
+    names=$(ls "$script_dir"/tools | sed 's/\.[^.]*$//' | grep -v "\\.")
     echo "$names"
 }
 
 function list_tools {
+    # shellcheck disable=SC2207
     tools=( $(get_tools) )
 
-    echo -e "Available tools:\n"
+    echo -e "Available tools:\\n"
 
     for i in "${tools[@]}"
     do
@@ -102,24 +106,27 @@ function list_tools {
 
 function tool_is_running {
     tool_name=$1
-    check_exists $tool_name
+    check_exists "$tool_name"
 
-    local compose_containers=( `docker-compose $(construct_arguments $tool_name) ps -q` )
+    local compose_containers
+    local containers_running
+    local filters
+
+    # shellcheck disable=SC2207 disable=SC2046
+    compose_containers=( $(docker-compose $(construct_arguments "$tool_name") ps -q) )
 
     # If no containers were returned, we are definitely not running
     if [ ${#compose_containers[@]} -eq 0 ]; then
-        return 0
+        return 1
     fi
-
-    local filters
 
     for i in "${compose_containers[@]}"
     do
         filters+="-f id=$i "
     done
 
-    local containers_running=`docker ps -q ${filters}`
-
+    # shellcheck disable=SC2086
+    containers_running=$(docker ps -q ${filters})
 
     if [[ "$containers_running" != "" ]]; then
         return 0
@@ -129,56 +136,57 @@ function tool_is_running {
 }
 
 function pull_tools {
+    # shellcheck disable=SC2207
     tools=( $(get_tools) )
 
     for i in "${tools[@]}"
     do
-        eval "docker-compose -f $(construct_arguments $i) pull"
+        eval "docker-compose $(construct_arguments "$i") pull"
     done
 }
 
 function start_tool {
     tool_name=$2
-    check_exists $tool_name
+    check_exists "$tool_name"
 
-    if tool_is_running $tool_name; then
+    if tool_is_running "$tool_name"; then
         echo "$tool_name is already running, won't try to start.."
         return 0
     fi
 
-    eval "docker-compose $(construct_arguments $tool_name) up -d"
+    eval "docker-compose $(construct_arguments "$tool_name") up -d"
 }
 
 function stop_tool {
     tool_name=$2
-    check_exists $tool_name
+    check_exists "$tool_name"
 
-    if ! tool_is_running $tool_name; then
+    if ! tool_is_running "$tool_name"; then
         echo "$tool_name is not running, won't try to stop.."
         return 0
     fi
 
-    eval "docker-compose $(construct_arguments $tool_name) down"
+    eval "docker-compose $(construct_arguments "$tool_name") down"
 }
 
 function restart_tool {
     tool_name=$2
-    check_exists $tool_name
+    check_exists "$tool_name"
 
-    if ! tool_is_running $tool_name; then
+    if ! tool_is_running "$tool_name"; then
         echo "$tool_name is not running, will be started instead"
-        start_tool ignored $tool_name
+        start_tool ignored "$tool_name"
         return 0
     fi
 
-    eval "docker-compose $(construct_arguments $tool_name) restart"
+    eval "docker-compose $(construct_arguments "$tool_name") restart"
 }
 
 function status_tool {
     tool_name=$2
-    check_exists $tool_name
+    check_exists "$tool_name"
 
-    if ! tool_is_running $tool_name; then
+    if ! tool_is_running "$tool_name"; then
         echo "$tool_name is NOT running"
     else
         echo "$tool_name is running"
@@ -191,14 +199,14 @@ function tool_ps {
 
 function tail_tool_log {
     tool_name=$2
-    check_exists $tool_name
+    check_exists "$tool_name"
 
-    if ! tool_is_running $tool_name; then
+    if ! tool_is_running "$tool_name"; then
         echo "$tool_name is not running, won't attempt to tail logs"
         return 0
     fi
 
-    eval "docker-compose $(construct_arguments $tool_name) logs --follow"
+    eval "docker-compose $(construct_arguments "$tool_name") logs --follow"
 }
 
 # -- Init section
@@ -213,27 +221,27 @@ case "$1" in
         pull_tools
     ;;
     start)
-        start_tool $@
+        start_tool "$@"
     ;;
     stop)
-        stop_tool $@
+        stop_tool "$@"
     ;;
     restart)
-        restart_tool $@
+        restart_tool "$@"
     ;;
     status)
-        status_tool $@
+        status_tool "$@"
     ;;
     ps)
         tool_ps
     ;;
     tail|logs)
-        tail_tool_log $@
+        tail_tool_log "$@"
     ;;
     *)
         echo -e "Development infrastructure tools"
-        echo -e "<https://github.com/evenh/dev-infra>\n"
-        echo -e "  Usage:  $0 <goal> <service>\n"
+        echo -e "<https://github.com/evenh/dev-infra>\\n"
+        echo -e "  Usage:  $0 <goal> <service>\\n"
         echo -e "  Ignores services:"
         echo -e "    list          List available tools"
         echo -e "    pull          Pull associated containers for all tools"
