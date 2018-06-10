@@ -1,4 +1,4 @@
-# dev-infra
+# dev-infra [![Build Status](https://travis-ci.org/evenh/dev-infra.svg?branch=master)](https://travis-ci.org/evenh/dev-infra)
 
 A simple wrapper around [Docker Compose](https://docs.docker.com/compose/) to easily manage various infrastructure tools that I use for development.
 
