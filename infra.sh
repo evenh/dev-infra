@@ -104,7 +104,22 @@ function tool_is_running {
     tool_name=$1
     check_exists $tool_name
 
-    containers_running=`docker-compose $(construct_arguments $tool_name) ps -q`
+    local compose_containers=( `docker-compose $(construct_arguments $tool_name) ps -q` )
+
+    # If no containers were returned, we are definitely not running
+    if [ ${#compose_containers[@]} -eq 0 ]; then
+        return 0
+    fi
+
+    local filters
+
+    for i in "${compose_containers[@]}"
+    do
+        filters+="-f id=$i "
+    done
+
+    local containers_running=`docker ps -q ${filters}`
+
 
     if [[ "$containers_running" != "" ]]; then
         return 0
