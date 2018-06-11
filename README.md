@@ -32,6 +32,8 @@ Requires a service to be specified:
 
 ### A note on Windows compatibility
 
+*In order to run under Windows, install [Git for Windows](https://git-scm.com/download/win) and use Git Bash.*
+
 For Windows, named volumes are used instead of host mounted folders (because of issues with Windows..). This means that when trying to start a service you will see a message like this:
 
 > Volume infra-servicename declared as external, but could not be found. Please create the volume manually using `docker volume create --name=infra-servicename` and try again.
