@@ -1,0 +1,10 @@
+version: "3"
+
+services:
+  mysql:
+    volumes:
+      - infra-zipkin:/mysql/data:Z
+
+volumes:
+  infra-zipkin:
+    external: true
