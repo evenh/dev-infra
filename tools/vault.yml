@@ -1,0 +1,17 @@
+version: "3"
+
+services:
+  vault:
+    image: vault:0.10.3
+    hostname: vault.infra.dev
+    ports:
+      - "8200:8200"
+    environment:
+      - VAULT_DEV_ROOT_TOKEN_ID=infra
+    networks:
+      - vault-net
+    cap_add:
+      - IPC_LOCK
+
+networks:
+  vault-net:
