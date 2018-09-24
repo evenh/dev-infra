@@ -3,39 +3,15 @@
 version: "3"
 
 services:
-  mysql:
-    image: openzipkin/zipkin-mysql:2
-    hostname: zipkin-mysql.infra.dev
-    volumes:
-      - ../storage/zipkin-mysql:/mysql/data:Z
-    networks:
-      - zipkin-net
-
   zipkin:
     image: openzipkin/zipkin:2
     environment:
-      - STORAGE_TYPE=mysql
-      - MYSQL_HOST=mysql
+      - STORAGE_TYPE=mem
       - ZIPKIN_UI_ENVIRONMENT=dev-infra
     ports:
       - 9411:9411
     networks:
       - zipkin-net
-    depends_on:
-      - mysql
-
-  dependencies:
-    image: openzipkin/zipkin-dependencies:1
-    entrypoint: crond -f
-    environment:
-      - STORAGE_TYPE=mysql
-      - MYSQL_HOST=mysql
-      - MYSQL_USER=zipkin
-      - MYSQL_PASS=zipkin
-    networks:
-      - zipkin-net
-    depends_on:
-      - mysql
 
 networks:
   zipkin-net:
